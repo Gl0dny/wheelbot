@@ -7,9 +7,11 @@ mh = Raspi_MotorHAT(addr=0x60)
 lm = mh.getMotor(1)
 rm = mh.getMotor(2)
 
+
 def turn_off_motors():
     lm.run(Raspi_MotorHAT.RELEASE)
     rm.run(Raspi_MotorHAT.RELEASE)
+
 
 atexit.register(turn_off_motors)
 
