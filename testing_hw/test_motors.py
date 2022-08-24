@@ -11,7 +11,7 @@ def turn_off_motors():
     lm.run(Raspi_MotorHAT.RELEASE)
     rm.run(Raspi_MotorHAT.RELEASE)
 
-    atexit.register(turn_off_motors)
+atexit.register(turn_off_motors)
 
 lm.setSpeed(150)
 rm.setSpeed(150)
