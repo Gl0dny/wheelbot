@@ -1,8 +1,7 @@
 from Raspi_MotorHAT import Raspi_MotorHAT as rpi_mh
 from gpiozero import DistanceSensor
-
 import atexit
-
+import leds_led_shim
 
 class Robot:
     def __init__(self, motorhat_addr=0x60):
@@ -15,7 +14,9 @@ class Robot:
         self.left_distance_sensor = DistanceSensor(echo=17, trigger=27, queue_len=2)
         self.right_distance_sensor = DistanceSensor(echo=5, trigger=6, queue_len=2)
 
-        atexit.register(self.stop_motors)
+        self.leds = leds_led_shim.Leds()
+
+        atexit.register(self.stop_all)
     
     def convert_speed(self, speed):
         mode = rpi_mh.RELEASE
@@ -30,6 +31,11 @@ class Robot:
     def stop_motors(self):
         self.left_motor.run(rpi_mh.RELEASE)
         self.right_motor.run(rpi_mh.RELEASE)
+    
+    def stop_all(self):
+        self.stop_motors()
+        self.leds.clear()
+        self.led.show()
 
     def set_left(self, speed):
         mode, output_speed = self.convert_speed(speed)
