@@ -7,7 +7,7 @@ class ObstacleAvoidingBehavior:
 
     def __init__(self, the_robot):
         self.robot = the_robot
-        self.speed = 40
+        self.speed = 60
     
     def get_speeds(self, nearest_distance):
         if nearest_distance >= 1.0:
@@ -30,7 +30,7 @@ class ObstacleAvoidingBehavior:
             #collision
             nearest_speed = -self.speed
             furthest_speed = -self.speed
-            delay=250
+            delay= 500
         return nearest_speed, furthest_speed, delay
 
 
@@ -54,7 +54,7 @@ class ObstacleAvoidingBehavior:
                 self.robot.set_left(furthest_speed)
                 self.robot.set_right(nearest_speed)
 
-            sleep(0.01 * delay)
+            sleep(0.001 * delay)
 
 bot = Robot()
 behavior = ObstacleAvoidingBehavior(bot)
