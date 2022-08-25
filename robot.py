@@ -35,7 +35,7 @@ class Robot:
     def stop_all(self):
         self.stop_motors()
         self.leds.clear()
-        self.led.show()
+        self.leds.show()
 
     def set_left(self, speed):
         mode, output_speed = self.convert_speed(speed)
