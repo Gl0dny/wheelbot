@@ -16,7 +16,7 @@ class Robot:
         self.right_distance_sensor = DistanceSensor(echo=5, trigger=6, queue_len=2)
 
         atexit.register(self.stop_motors)
-
+    
     def convert_speed(self, speed):
         mode = rpi_mh.RELEASE
         if speed > 0:
