@@ -2,6 +2,7 @@ from ast import Return
 from turtle import right
 from robot import Robot
 from time import sleep
+from led_rainbow import show_rainbow
 
 class ObstacleAvoidingBehavior:
     # Simple obstacle avoiding
@@ -22,11 +23,14 @@ class ObstacleAvoidingBehavior:
     def display_state(self, left_distance, right_distance):
         self.robot.leds.clear()
         led_bar = self.distance_to_led_bar(left_distance)
-        self.robot.leds.set_range(range(led_bar), self.sense_colour)
+        # self.robot.leds.set_range(range(led_bar), self.sense_colour)
+        show_rainbow(self.robot.leds, range(led_bar))
 
         led_bar = self.distance_to_led_bar(right_distance)
         start = (self.robot.leds.count - 1) - led_bar
-        self.robot.leds.set_range(range(start, self.robot.leds.count - 1), self.sense_colour)
+        # self.robot.leds.set_range(range(start, self.robot.leds.count - 1), self.sense_colour)
+        right_range = range(self.robot.leds.count - 1, start, -1)
+        show_rainbow(self.robot.leds, right_range)
 
         self.robot.leds.show()    
 
