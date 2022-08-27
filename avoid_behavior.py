@@ -9,7 +9,7 @@ class ObstacleAvoidingBehavior:
 
     def __init__(self, the_robot):
         self.robot = the_robot
-        self.speed = 60
+        self.speed = 40
         self.led_half = int(self.robot.leds.count/2)
         self.sense_colour = (255, 0, 0)
         
@@ -38,24 +38,24 @@ class ObstacleAvoidingBehavior:
         if nearest_distance >= 1.0:
             nearest_speed = self.speed
             furthest_speed = self.speed
-            delay = 100
+            delay = 50
         elif nearest_distance >= 0.5:
             nearest_speed = self.speed
             furthest_speed = self.speed * 0.8
-            delay = 100
+            delay = 50
         elif nearest_distance >= 0.2:
             nearest_speed = self.speed
             furthest_speed = self.speed * 0.6
-            delay = 100
+            delay = 50
         elif nearest_distance >= 0.1:
             nearest_speed = -self.speed * 0.4
             furthest_speed = -self.speed 
-            delay = 100
+            delay = 300
         else:
             #collision
             nearest_speed = -self.speed
             furthest_speed = -self.speed
-            delay= 500
+            delay= 700
         return nearest_speed, furthest_speed, delay
 
 
