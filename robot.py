@@ -52,7 +52,7 @@ class Robot:
         self.right_motor.run(mode)
 
     def set_pan(self, angle):
-        self.servos.set_servo_angle(1, angle)
+        self.servos.set_servo_angle(0, angle)
 
     def set_tilt(self, angle):
-        self.servos.set_servo_angle(0, angle)
+        self.servos.set_servo_angle(1, angle)
