@@ -24,3 +24,4 @@ while True:
     position = int(input("Servo position in degrees (90 to -90, 0 - middle position: "))
     end_step = convert_degrees_to_steps(position)
     pwm.setPWM(0, 0, end_step)
+    pwm.setPWM(1, 0, end_step)
