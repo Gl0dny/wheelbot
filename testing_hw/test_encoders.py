@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, '/home/pi/Projects/2-wheeled-autonomous-robot')
 from robot import Robot
 import time
 import logging
@@ -16,5 +18,15 @@ class EncoderCounter(object):
 
 
 bot = Robot()
-left_encoder = EncoderCounter(4)
+left_encoder = EncoderCounter(4)    #there is an issue for pin 4 both edge detection, one solution is -> 1-wire has to be disabled
 right_encoder = EncoderCounter(26)
+
+stop_at_time = time.time() + 1
+
+logging.basicConfig(level = logging.INFO)
+bot.set_left(90)
+bot.set_right(90)
+
+while time.time() < stop_at_time:
+    logger.info(f"Left: Right: {right_encoder.pulse_count}")
+    time.sleep(0.05)
