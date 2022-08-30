@@ -1,5 +1,3 @@
-from ast import Return
-from turtle import right
 from robot import Robot
 from time import sleep
 from led_rainbow import show_rainbow
