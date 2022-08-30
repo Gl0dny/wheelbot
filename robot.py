@@ -3,6 +3,7 @@ from gpiozero import DistanceSensor
 import atexit
 import leds_led_shim
 from servos import Servos
+from encoder_counter import EncoderCounter
 
 class Robot:
     def __init__(self, motorhat_addr=0x60):
@@ -18,6 +19,9 @@ class Robot:
         self.leds = leds_led_shim.Leds()
 
         self.servos = Servos(addr=motorhat_addr)
+
+        self.left_encoder = EncoderCounter(4) #there is an issue for pin 4 both edge detection, one solution is -> 1-wire has to be disabled
+        self.right_encoder = EncoderCounter(26)
 
         atexit.register(self.stop_all)
     
@@ -40,6 +44,8 @@ class Robot:
         self.leds.clear()
         self.leds.show()
         self.servos.stop_all()
+        self.left_encoder.stop()
+        self.right_encoder.stop()
 
     def set_left(self, speed):
         mode, output_speed = self.convert_speed(speed)
