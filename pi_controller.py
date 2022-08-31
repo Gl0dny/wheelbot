@@ -13,3 +13,9 @@ class PIController:
     def handle_integral(self, error):
         self.integral_sum += error
         return self.integral_constant * self.integral_sum
+
+    def ge_value(self, error):
+        p = self.handle_proportional(error)
+        i = self.handle_integral(error)
+        logger.debug(f"P: {p}, I: {i:.2f}")
+        return p + i
