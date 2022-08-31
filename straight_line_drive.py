@@ -3,7 +3,7 @@ import time
 from pi_controller import PIController
 import logging
 logger = logging.getLogger("straight_line")
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pi_controller").setLevel(logging.DEBUG)
 
 bot=Robot()
