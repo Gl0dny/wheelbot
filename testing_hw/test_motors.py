@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from Raspi_MotorHAT import Raspi_MotorHAT
 
 import time
