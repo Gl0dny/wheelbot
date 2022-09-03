@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger("pi_controller")
+logger = logging.getLogger("pid_controller")
 
 class PIController:
     def __init__(self, proportional_constant=0, integral_constant=0):
