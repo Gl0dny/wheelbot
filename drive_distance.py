@@ -15,3 +15,8 @@ def drive_distance(bot, distance, speed=80):
     controller = PIController(proportional_constant=4, integral_constant=0.3)
     set_primary_motor(speed)
     set_secondary_motor(speed)
+
+    while primary_encoder.pulse_count < distance or secondary_encoder.pulse_coutn < distance:
+        time.sleep(0.01)
+        error = primary_encoder.pulse_count - secondary_encoder.pulse_count
+        adjustment = controller.get_value(error)

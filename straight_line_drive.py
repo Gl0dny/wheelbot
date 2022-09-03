@@ -13,14 +13,14 @@ speed = 80
 bot.set_left(speed)
 bot.set_right(speed)
 
-pi = PIController(proportional_constant=4, integral_constant=0.3)
+pid = PIController(proportional_constant=4, integral_constant=0.3)
 
 while time.time() < stop_at_time:
     time.sleep(0.01)
     left = bot.left_encoder.pulse_count
     right = bot.right_encoder.pulse_count
     error = left - right
-    adjustment = pi.get_value(error)
+    adjustment = pid.get_value(error)
     right_speed = int(speed + adjustment)
     left_speed = int(speed - adjustment)
 
