@@ -1,6 +1,7 @@
+#!/usr/bin/python3
 from robot import Robot
 import time
-from pi_controller import PIController
+from pid_controller import PIController
 import logging
 logger = logging.getLogger("straight_line")
 logging.basicConfig(level=logging.DEBUG)

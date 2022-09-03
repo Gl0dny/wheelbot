@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from robot import Robot
 from time import sleep
 

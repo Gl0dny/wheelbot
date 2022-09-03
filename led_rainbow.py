@@ -1,4 +1,5 @@
 import colorsys
+
 def show_rainbow(leds, led_range):
     led_range = list(led_range)
     hue_step = 1.0 / len(led_range)
