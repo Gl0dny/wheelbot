@@ -6,6 +6,12 @@ from servos import Servos
 from encoder_counter import EncoderCounter
 
 class Robot:
+    #parameteres
+    wheel_diameter_mm = 70.0
+    encoders_shield_slits = 20.0
+    ticks_per_revolution_multiplier = 2.0
+    wheel_distance_mm = 140.0
+
     def __init__(self, motorhat_addr=0x60):
 
         self._mh = rpi_mh(addr=motorhat_addr)
@@ -18,8 +24,9 @@ class Robot:
 
         self.leds = leds_led_shim.Leds()
 
-        self.servos = Servos(addr=motorhat_addr)
+        self.servos = Servos(addr=motorhat_addr)    
 
+        EncoderCounter.set_constants(self.wheel_diameter_mm, self.encoders_shield_slits, self.ticks_per_revolution_multiplier)
         self.left_encoder = EncoderCounter(4) #there is an issue for pin 4 both edge detection, one solution is -> 1-wire has to be disabled
         self.right_encoder = EncoderCounter(26)
 
