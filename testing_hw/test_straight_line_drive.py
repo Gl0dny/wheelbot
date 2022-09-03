@@ -1,8 +1,11 @@
 #!/usr/bin/python3
+import sys
+sys.path.insert(0, '/home/pi/Projects/2-wheeled-autonomous-robot')
 from robot import Robot
 import time
 from pid_controller import PIController
 import logging
+
 logger = logging.getLogger("straight_line")
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pi_controller").setLevel(logging.DEBUG)

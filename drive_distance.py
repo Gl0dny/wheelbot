@@ -20,3 +20,12 @@ def drive_distance(bot, distance, speed=80):
         time.sleep(0.01)
         error = primary_encoder.pulse_count - secondary_encoder.pulse_count
         adjustment = controller.get_value(error)
+        set_primary_motor(int(speed - adjustment))
+        set_secondary_motor(int(speed + adjustment))
+
+        logger.debug(f"""Encoders: primary: {primary_encoder.pulse_count},
+                    secondary: {secondary_encoder.pulse_count},
+                    error: {error}, adjustment: {adjustment:.2f}\n""")
+
+    
+
