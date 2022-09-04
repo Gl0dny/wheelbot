@@ -59,8 +59,8 @@ class ObstacleAvoidingBehavior:
 
 
     def run(self):
-        # self.robot.set_pan(0)
-        # self.robot.set_tilt(0)
+        self.robot.set_pan(0)
+        self.robot.set_tilt(0)
         
         while True:
             left_distance = self.robot.left_distance_sensor.distance
