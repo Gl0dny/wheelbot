@@ -59,6 +59,7 @@ def drive_distances(bot, left_distance, right_distance, speed=80):
 
 def drive_arc(bot, turn_in_degrees, radius, speed=80):
     half_width_ticks = EncoderCounter.mm_to_ticks(bot.wheel_distance_mm / 2.0)
+    
     if turn_in_degrees < 0:
         left_radius = radius - half_width_ticks
         right_radius = radius + half_width_ticks
@@ -66,6 +67,10 @@ def drive_arc(bot, turn_in_degrees, radius, speed=80):
         left_radius = radius + half_width_ticks
         right_radius = radius - half_width_ticks
     
+    turn_in_radians = math.radians(abs(turn_in_degrees))
+    left_distance = int(left_radius * turn_in_radians)
+    right_distance = int(right_radius * turn_in_radians)
+
     logger.info(f"Left arc radius: {left_radius:.2f} [mm], Right arc radius: {right_radius:.2f} [mm]")
 
 logging.basicConfig(level=logging.DEBUG)
