@@ -32,4 +32,3 @@ bot = Robot()
 distance_to_drive = 1000
 distance_in_ticks = EncoderCounter.mm_to_ticks(distance_to_drive)
 drive_distance(bot, distance_in_ticks) 
-atexit

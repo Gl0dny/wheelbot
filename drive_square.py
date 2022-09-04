@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger("drive_square")
 
-def drive_distances(bot, left_distance, right_distance, speed=80):
+def _drive_distances(bot, left_distance, right_distance, speed=80):
     
     if abs(left_distance) >= abs(right_distance):
         logger.info("Left motor is the primary one")
@@ -34,7 +34,7 @@ def drive_distances(bot, left_distance, right_distance, speed=80):
     primary_encoder.reset()
     secondary_encoder.reset()
 
-    controller = PIController(proportional_constant=4, integral_constant=0.3)
+    controller = PIController(proportional_constant=5, integral_constant=0.2)
     primary_encoder.set_direction(int(math.copysign(1, speed)))
     secondary_encoder.set_direction(int(math.copysign(1, secondary_speed)))
     set_primary_motor(speed)
@@ -57,13 +57,13 @@ def drive_distances(bot, left_distance, right_distance, speed=80):
             set_primary_motor(0)
             secondary_speed = 0        
 
-def drive_arc(bot, turn_in_degrees, radius, speed=80):
+def drive_arc(bot, turn_in_degrees, radius, arc_speed=80):
     half_width_ticks = EncoderCounter.mm_to_ticks(bot.wheel_distance_mm / 2.0)
     
     if turn_in_degrees < 0:
         left_radius = radius - half_width_ticks
         right_radius = radius + half_width_ticks
-    else:
+    elif turn_in_degrees > 0:
         left_radius = radius + half_width_ticks
         right_radius = radius - half_width_ticks
     
@@ -71,17 +71,17 @@ def drive_arc(bot, turn_in_degrees, radius, speed=80):
     left_distance = int(left_radius * turn_in_radians)
     right_distance = int(right_radius * turn_in_radians)
 
-    logger.info(f"Left arc radius: {left_radius:.2f} [mm], Right arc radius: {right_radius:.2f} [mm]")
+    _drive_distances(bot, left_distance, right_distance, speed = arc_speed)
 
+    logger.info(f"Left arc radius: {left_radius:.2f} [mm], Right arc radius: {right_radius:.2f} [mm]")
+    
 logging.basicConfig(level=logging.DEBUG)
 bot = Robot()
-distance_to_drive = 300
-distance_in_ticks = EncoderCounter.mm_to_ticks(distance_to_drive)
-radius = bot.wheel_distance_mm + 100
+radius = bot.wheel_distance_mm + 50
 radius_in_ticks = EncoderCounter.mm_to_ticks(radius)
+arc_degree = 90
+speed = 50
 
-# for n in range(4):
-#     drive_distances(bot, distance_in_ticks)
-#     # drive_arc(bot, 90, radius_in_ticks, speed=50)
 
-atexit
+for n in range(4):
+    drive_arc(bot, arc_degree, radius_in_ticks, speed)
