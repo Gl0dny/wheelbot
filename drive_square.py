@@ -27,9 +27,9 @@ def drive_distances(bot, left_distance, right_distance, speed=80):
         primary_distance = right_distance
         secondary_distance = left_distance
 
-    primary_to_seconadry_ratio = secondary_distance / primary_distance
-    secondary_speed = speed * primary_to_seconadry_ratio
-    logger.debug(f"Distance to go: Primary: {primary_distance}, Secondary: {secondary_distance}, Ratio: {primary_to_seconadry_ratio:.2f}")
+    secondary_to_primary_ratio = secondary_distance / primary_distance
+    secondary_speed = speed * secondary_to_primary_ratio
+    logger.debug(f"Distance to go: Primary: {primary_distance}, Secondary: {secondary_distance}, Ratio: {secondary_to_primary_ratio:.2f}")
 
     primary_encoder.reset()
     secondary_encoder.reset()
@@ -38,17 +38,24 @@ def drive_distances(bot, left_distance, right_distance, speed=80):
     primary_encoder.set_direction(math.copysign(1, speed))
     secondary_encoder.set_direction(math.copysign(1, secondary_speed))
     set_primary_motor(speed)
-    set_secondary_motor(speed)
+    set_secondary_motor(int(secondary_speed))
 
-    # while primary_encoder.pulse_count < distance or secondary_encoder.pulse_count < distance:
-    #     time.sleep(0.01)
-    #     error = primary_encoder.pulse_count - secondary_encoder.pulse_count
-    #     adjustment = controller.get_value(error)
-    #     set_primary_motor(int(speed - adjustment))
-    #     set_secondary_motor(int(speed + adjustment))
+    while abs(primary_encoder.pulse_count) < abs(primary_distance) or abs(secondary_encoder.pulse_count) < abs(secondary_distance):
+        time.sleep(0.01)
+        secondary_target = primary_encoder.pulse_count * secondary_to_primary_ratio
+        error = secondary_target - secondary_encoder.pulse_count
+        adjustment = controller.get_value(error)
+        set_secondary_motor(int(secondary_speed + adjustment))
+        secondary_encoder.set_direction(math.copysign(1, secondary_speed+adjustment))
 
-    #     logger.debug(f"Encoders: primary: {primary_encoder.pulse_count}, secondary: {secondary_encoder.pulse_count},\nerror: {error}, adjustment: {adjustment:.2f}\n")
-    #     logger.info(f"Distances: primary: {primary_encoder.distance_in_mm()} [mm], secondary: {secondary_encoder.distance_in_mm()} [mm]\n")
+
+        logger.debug(f"Encoders: primary: {primary_encoder.pulse_count}, secondary: {secondary_encoder.pulse_count},\nerror: {error}, adjustment: {adjustment:.2f}\n")
+        logger.info(f"Distances: primary: {primary_encoder.distance_in_mm()} [mm], secondary: {secondary_encoder.distance_in_mm()} [mm]\n")
+
+        if abs(primary_encoder.pulse_count) >= abs(primary_distance):
+            logger.info("Primary motor stopped")
+            set_primary_motor(0)
+            secondary_speed = 0        
 
 logging.basicConfig(level=logging.DEBUG)
 bot = Robot()
@@ -59,6 +66,6 @@ radius_in_ticks = EncoderCounter.mm_to_ticks(radius)
 
 for n in range(4):
     drive_distances(bot, distance_in_ticks)
-    drive_arc(bot, 90, radius_in_ticks, speed=50)
+    # drive_arc(bot, 90, radius_in_ticks, speed=50)
 
 atexit
