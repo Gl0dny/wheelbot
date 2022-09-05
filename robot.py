@@ -1,9 +1,10 @@
-from Raspi_MotorHAT import Raspi_MotorHAT as rpi_mh
-from gpiozero import DistanceSensor
+# from Raspi_MotorHAT import Raspi_MotorHAT as rpi_mh
+# from gpiozero import DistanceSensor
+import p_2war_hardware_abstraction_layer as HAL
 import atexit
-import leds_led_shim
-from servos import Servos
-from encoder_counter import EncoderCounter
+# import leds_led_shim
+# from servos import Servos
+# from encoder_counter import EncoderCounter
 
 class Robot:
     #parameteres
@@ -14,37 +15,37 @@ class Robot:
 
     def __init__(self, motorhat_addr=0x60):
 
-        self._mh = rpi_mh(addr=motorhat_addr)
+        self._mh = HAL.rpi_mh(addr=motorhat_addr)
 
         self.left_motor = self._mh.getMotor(1)
         self.right_motor = self._mh.getMotor(2)
 
-        self.left_distance_sensor = DistanceSensor(echo=17, trigger=27, queue_len=2)
-        self.right_distance_sensor = DistanceSensor(echo=5, trigger=6, queue_len=2)
+        self.left_distance_sensor = HAL.DistanceSensor(echo=17, trigger=27, queue_len=2)
+        self.right_distance_sensor = HAL.DistanceSensor(echo=5, trigger=6, queue_len=2)
 
-        self.leds = leds_led_shim.Leds()
+        self.leds = HAL.leds_led_shim.Leds()
 
-        self.servos = Servos(addr=motorhat_addr)    
+        self.servos = HAL.servos.Servos(addr=motorhat_addr)    
 
-        EncoderCounter.set_constants(self.wheel_diameter_mm, self.encoders_shield_slits, self.ticks_per_revolution_multiplier)
-        self.left_encoder = EncoderCounter(4) #there is an issue for pin 4 both edge detection, one solution is -> 1-wire has to be disabled
-        self.right_encoder = EncoderCounter(26)
+        HAL.encoder_counter.EncoderCounter.set_constants(self.wheel_diameter_mm, self.encoders_shield_slits, self.ticks_per_revolution_multiplier)
+        self.left_encoder = HAL.encoder_counter.EncoderCounter(4) #there is an issue for pin 4 both edge detection, one solution is -> 1-wire has to be disabled
+        self.right_encoder = HAL.encoder_counter.EncoderCounter(26)
 
         atexit.register(self.stop_all)
     
     def convert_speed(self, speed):
-        mode = rpi_mh.RELEASE
+        mode = HAL.rpi_mh.RELEASE
         if speed > 0:
-            mode = rpi_mh.FORWARD
+            mode = HAL.rpi_mh.FORWARD
         elif speed < 0:
-            mode = rpi_mh.BACKWARD
+            mode = HAL.rpi_mh.BACKWARD
 
         output_speed = (abs(speed*255)) // 100
         return mode, int(output_speed)
 
     def stop_motors(self):
-        self.left_motor.run(rpi_mh.RELEASE)
-        self.right_motor.run(rpi_mh.RELEASE)
+        self.left_motor.run(HAL.rpi_mh.RELEASE)
+        self.right_motor.run(HAL.rpi_mh.RELEASE)
     
     def stop_all(self):
         self.stop_motors()

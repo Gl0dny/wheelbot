@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-import atexit
 from pid_controller import PIController
-from robot import Robot, EncoderCounter
+from robot import Robot
+from p_2war_hardware_abstraction_layer import EncoderCounter
 import time
 import math
 import logging
