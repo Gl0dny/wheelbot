@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import sys
-sys.path.insert(0, '/home/pi/Projects/2-wheeled-autonomous-robot')
+sys.path.append('/home/pi/Projects/2-wheeled-autonomous-robot')
 from robot import Robot
 from time import sleep
 
