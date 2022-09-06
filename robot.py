@@ -1,13 +1,9 @@
-# from Raspi_MotorHAT import Raspi_MotorHAT as rpi_mh
-# from gpiozero import DistanceSensor
 import p_2war_hardware_abstraction_layer as HAL
 import atexit
-# import leds_led_shim
-# from servos import Servos
-# from encoder_counter import EncoderCounter
+
 
 class Robot:
-    #parameteres
+    #parameters
     wheel_diameter_mm = 70.0
     encoders_shield_slits = 20.0
     ticks_per_revolution_multiplier = 2.0
@@ -15,7 +11,7 @@ class Robot:
 
     def __init__(self, motorhat_addr=0x60):
 
-        self._mh = HAL.rpi_mh(addr=motorhat_addr)
+        self._mh = HAL.RPI_MH(addr=motorhat_addr)
 
         self.left_motor = self._mh.getMotor(1)
         self.right_motor = self._mh.getMotor(2)
@@ -34,18 +30,18 @@ class Robot:
         atexit.register(self.stop_all)
     
     def convert_speed(self, speed):
-        mode = HAL.rpi_mh.RELEASE
+        mode = HAL.RPI_MH.RELEASE
         if speed > 0:
-            mode = HAL.rpi_mh.FORWARD
+            mode = HAL.RPI_MH.FORWARD
         elif speed < 0:
-            mode = HAL.rpi_mh.BACKWARD
+            mode = HAL.RPI_MH.BACKWARD
 
         output_speed = (abs(speed*255)) // 100
         return mode, int(output_speed)
 
     def stop_motors(self):
-        self.left_motor.run(HAL.rpi_mh.RELEASE)
-        self.right_motor.run(HAL.rpi_mh.RELEASE)
+        self.left_motor.run(HAL.RPI_MH.RELEASE)
+        self.right_motor.run(HAL.RPI_MH.RELEASE)
     
     def stop_all(self):
         self.stop_motors()
