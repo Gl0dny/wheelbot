@@ -1,0 +1,11 @@
+### Initial idea - tools to use
+
+    #RPi Cookbook
+        There is module called guizero for python/ rpi UI but it isn't 
+        compatiblewith StepperMotorHat - servos are controlled in a 
+        different way
+
+        There is module called tkinter which seems to be a base for guizero
+
+    There is also an idea for using QT with C++ but I'd have to learn it first 
+    ( and I probably will )
