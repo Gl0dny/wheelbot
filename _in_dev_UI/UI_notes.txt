@@ -9,3 +9,8 @@
 
     There is also an idea for using QT with C++ but I'd have to learn it first 
     ( and I probably will )
+
+### Database + presenting data
+
+    InfluxDB sounds like good thing to learn as a Database. It's an timeseries database ecosystem.
+    Grafana for presenting data 
