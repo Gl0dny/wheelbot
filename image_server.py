@@ -14,3 +14,11 @@ def frame_generator():
 
     for frame in HAL.camera_stream.start_stream(camera):
         encoded_bytes = HAL.camera_stream.get_encoded_bytes_for_frame(frame)
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + encoded_bytes + b'\r\n')
+
+    @app.rout('/display')
+    def display():
+        return Response(frame_generator(), mimetype = 'multipart/x-mixed-replace; boundary=frame')
+
+    app.run(host="0.0.0.0", debug=True, port=5001)
