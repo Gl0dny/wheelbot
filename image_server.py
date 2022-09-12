@@ -1,5 +1,7 @@
+#!/usr/bin/python3
 from flask import Flask, render_template, Response
-import p_2war_hardware_abstraction_layer as HAL
+# import p_2war_hardware_abstraction_layer as import camera_stream
+import camera_stream
 import time
 
 app = Flask(__name__)
@@ -9,16 +11,16 @@ def index():
     return render_template('image_server.html')
 
 def frame_generator():
-    camera = HAL.camera_stream.setup_camera()
+    camera = camera_stream.setup_camera()
     time.sleep(0.1)
 
-    for frame in HAL.camera_stream.start_stream(camera):
-        encoded_bytes = HAL.camera_stream.get_encoded_bytes_for_frame(frame)
+    for frame in camera_stream.start_stream(camera):
+        encoded_bytes = camera_stream.get_encoded_bytes_for_frame(frame)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + encoded_bytes + b'\r\n')
 
-    @app.rout('/display')
-    def display():
-        return Response(frame_generator(), mimetype = 'multipart/x-mixed-replace; boundary=frame')
+@app.route('/display')
+def display():
+    return Response(frame_generator(), mimetype = 'multipart/x-mixed-replace; boundary=frame')
 
-    app.run(host="0.0.0.0", debug=True, port=5001)
+app.run(host="0.0.0.0", debug=True, port=5001)
