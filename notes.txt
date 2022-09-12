@@ -1,0 +1,25 @@
+ ### Python basics ( pdf od Oliviera )   
+    
+    W sytuacji, gdy dana funkcjonalność nie została jeszcze w pełni zaimplementowana i nie powinna być używana, warto
+    zaznaczyć ten fakt stosując zamiast instrukcji pass instrukcję raise NotImplementedError(), która rzuci
+    stosowny wyjątek10 – i tym samym przerwie dalsze wykonanie programu.
+
+    def no_return():
+    pass 
+    # W jęezyku Python aby zdefiniować funkcj˛
+    e, która "nic nie robi"
+    #
+    musimy użyć instrukcji `pass`.
+    print(no_return())
+    da następujący wynik
+    None
+    czyli mimo braku jawnej instrukcji „return None” interpreter i tak zwrócił None.
+
+    Jeśli potrzebujemy zasymulować przeciążanie znane z języka C++, możemy uzyskać pożądany efekt za
+    pomocą argumentów domyślnych (typ parametrów nie ma w języku Python znaczenia):
+    def f(n, m=None):
+    if m:
+    return n + m + 42
+    else:
+    return n + 42
+
