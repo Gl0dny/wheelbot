@@ -3,7 +3,7 @@ from picamera import PiCamera
 import numpy as np
 import cv2
 
-size = (320,240)
+size = (320, 240)
 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
 
 def setup_camera():
