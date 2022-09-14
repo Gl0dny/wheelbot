@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import time
 from multiprocessing import Process, Queue
 from flask import Flask, render_template, Response, request
