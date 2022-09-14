@@ -22,4 +22,4 @@ def frame_generator():
 def display():
     return Response(frame_generator(), mimetype = 'multipart/x-mixed-replace; boundary=frame')
 
-app.run(host="0.0.0.0", debug=True, port=5001)
+app.run(host="localhost", debug=True, port=5001)
