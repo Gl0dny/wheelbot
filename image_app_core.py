@@ -30,3 +30,13 @@ def start_server_process(template_name):
     server = Process(target=app.run, kwargs={"host": "localhost","port": 5001})
     server.start()
     return server
+
+def put_output_image(encoded_bytes):
+    if display_queue.empty():
+        display_queue.put(encoded_bytes)
+
+def get_control_instruction():
+    if control_queue.empty():
+        return None
+    else:
+        return control_queue.get()
