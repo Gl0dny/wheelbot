@@ -1,8 +1,7 @@
 #!/usr/bin/python3
-from re import template
 import time
 from multiprocessing import Process, Queue
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 
 app = Flask(__name__)
 control_queue = Queue()
@@ -23,6 +22,12 @@ def frame_generator():
 @app.route('/display')
 def display():
     return Response(frame_generator(), mimetype = 'multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/control', methods=['POST'])
+def control():
+    control_queue.put(request.form)
+    return Response('queued')
+
 
 def start_server_process(template_name):
     global display_template

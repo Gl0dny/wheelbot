@@ -1,8 +1,5 @@
 #!/usr/bin/python3
-from ssl import _PasswordType
 import time
-from tkinter import NONE
-from xml.dom.minidom import parseString
 import p_2war_hardware_abstraction_layer as HAL
 import image_app_core as img_server
 
@@ -17,7 +14,7 @@ def controlled_image_server_behavior():
         instruction = img_server.get_control_instruction()
         if instruction and instruction['command'] == "exit":
             print("Closing...")
-            pass
+            return None
 
 process = img_server.start_server_process('control_image_behavior.html')
 try:
