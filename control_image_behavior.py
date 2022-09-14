@@ -19,8 +19,8 @@ def controlled_image_server_behavior():
             print("Closing...")
             pass
 
-    process = img_server.start_server_process('control_image_behavior.html')
-    try:
-        controlled_image_server_behavior()
-    finally:
-        process.terminate()
+process = img_server.start_server_process('control_image_behavior.html')
+try:
+    controlled_image_server_behavior()
+finally:
+    process.terminate()
