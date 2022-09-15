@@ -28,4 +28,18 @@ class ColorTracking:
                 print("Closing...")
                 exit()
 
-        
+    def find_object(self, original_frame):
+        """Find the largest circle from all object countours.
+        Output: masked img, object coordinates ( in pixels ), object circle radius"""
+
+        frame_hsv = cv2.cvtColor(original_frame, cv2.COLOR_BGR2HSV)
+        masked_img = cv2.inRange(frame_hsv, self.green_color_low_range, self.green_color_high_range)
+        contours, _ = cv2.findContours(masked_img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        circles = [cv2.minEnclosingCircle(cnt) for cnt in contours]
+
+        largest_circle = [(0, 0), 0]
+        for (x, y), radius in circles:
+            if radius > largest_circle[1]:
+                largest_circle = (int(x), int(y), int(radius))
+                
+        return masked_img, largest_circle[0], largest_circle[1]
