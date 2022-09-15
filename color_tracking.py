@@ -16,6 +16,16 @@ class ColorTracking:
         self.center = img_server.camera_stream.resolution // 2 
         self.motors_on = False
 
-        
+    def process_control(self):
+        instruction = img_server.core.get_control_instruction()
+        if instruction:
+            command = instruction["command"]
+            if command == "start":
+                self.motors_on = True
+            elif command == "stop":
+                self.motors_on == False
+            elif command == "exit":
+                print("Closing...")
+                exit()
 
         
