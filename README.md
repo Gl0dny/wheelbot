@@ -10,3 +10,6 @@ Libs:
 cv2
 https://github.com/orionrobots/Raspi_MotorHAT
 ledshim
+
+
+dodac kilka kolorów do wykrywania(?)

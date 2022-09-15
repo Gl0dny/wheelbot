@@ -3,18 +3,19 @@ from picamera import PiCamera
 import numpy as np
 import cv2
 
-size = (320, 240)
 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
 
 def setup_camera():
     camera = PiCamera()
-    camera.resolution = size
+    global resolution 
+    resolution = (320, 240)
+    camera.resolution = resolution
     camera.framerate = 30
     camera.rotation = 0
     return camera
 
 def start_stream(camera):
-    image_storage = PiRGBArray(camera, size=size)
+    image_storage = PiRGBArray(camera, size=resolution)
     cam_stream = camera.capture_continuous(image_storage, format="bgr", use_video_port=True)
     for raw_frame in cam_stream:
         yield raw_frame.array
