@@ -44,7 +44,14 @@ class ColorTracking:
                 
         return masked_img, largest_circle[0], largest_circle[1]
 
-    def make_display(self, frame, masked_frame):
-        display_frame = np.concatenate((frame, masked_frame), axis = 1)
+    def make_display(self, frame, processed_frame):
+        display_frame = np.concatenate((frame, processed_frame), axis = 1)
         encoded_bytes = img_server.camera_stream.get_encoded_bytes_for_frame(display_frame)
         img_server.core.put_output_image(encoded_bytes)
+
+    def process_frame(self, frame):
+        masked_img, coordinates, radius = self.find_object(frame)
+        processed_frame = cv2.cvtColor(masked_img, cv2.COLOR_GRAY2BGR)
+        cv2.circle(frame, coordinates, radius, [255, 0, 0])
+        self.make_display(frame, processed_frame)
+        return coordinates, radius
