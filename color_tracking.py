@@ -10,9 +10,9 @@ class ColorTracking:
     def __init__(self, robot):
         self.robot = robot
         #object parameters:
-        self.green_color_low_range = (35, 102, 25)  #HSV - Hue Saturation Value
+        self.green_color_low_range = (35, 70, 25)  #HSV - Hue Saturation Value
         self.green_color_high_range = (80, 255, 255)
-        self.correct_radius = 100  
+        self.correct_radius = 50 
         self.center = 160       #hardcoded half of horizontal resolution
         self.following = False
 
@@ -24,9 +24,10 @@ class ColorTracking:
                 self.following = True
                 print("Following...")
             elif command == "stop":
-                self.following == False
-            elif command == "exit":
+                self.following = False
                 print("Following stopped.")
+            if command == "exit":
+                print("Color tracking stopped.")
                 exit()
 
     def find_object(self, original_frame):
@@ -70,7 +71,7 @@ class ColorTracking:
         for frame in img_server.camera_stream.start_stream(camera):
             (x, y), radius = self.process_frame(frame)
             self.process_control()
-            if self.following and (radius < self.correct_radius) and (radius > 20):
+            if self.following and (radius > 5):
                 #PID to control the distance between robot and the followed object
                 radius_error = self.correct_radius - radius
                 speed_value = speed_pid.get_value(radius_error)
@@ -82,8 +83,7 @@ class ColorTracking:
                 print(f"{radius}, {radius_error}, {speed_value:.2f}, {direction_error}, {direction_value:.2f}")
 
                 self.robot.set_left(speed_value - direction_value)
-                self.robot_set_right(speed_value + direction_value)
-
+                self.robot.set_right(speed_value + direction_value)
             else:
                 self.robot.stop_motors()
                 if not self.following:
