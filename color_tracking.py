@@ -43,3 +43,8 @@ class ColorTracking:
                 largest_circle = (int(x), int(y), int(radius))
                 
         return masked_img, largest_circle[0], largest_circle[1]
+
+    def make_display(self, frame, masked_frame):
+        display_frame = np.concatenate((frame, masked_frame), axis = 1)
+        encoded_bytes = img_server.camera_stream.get_encoded_bytes_for_frame(display_frame)
+        img_server.core.put_output_image(encoded_bytes)
