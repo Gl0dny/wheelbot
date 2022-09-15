@@ -12,7 +12,7 @@ class ColorTracking:
         #object parameters:
         self.green_color_low_range = (35, 102, 25)  #HSV - Hue Saturation Value
         self.green_color_high_range = (80, 255, 255)
-        self.correct_radius = 50   
+        self.correct_radius = 100  
         self.center = 160       #hardcoded half of horizontal resolution
         self.following = False
 
@@ -22,10 +22,11 @@ class ColorTracking:
             command = instruction["command"]
             if command == "start":
                 self.following = True
+                print("Following...")
             elif command == "stop":
                 self.following == False
             elif command == "exit":
-                print("Closing...")
+                print("Following stopped.")
                 exit()
 
     def find_object(self, original_frame):
@@ -69,7 +70,7 @@ class ColorTracking:
         for frame in img_server.camera_stream.start_stream(camera):
             (x, y), radius = self.process_frame(frame)
             self.process_control()
-            if self.following and radius > self.correct_radius:
+            if self.following and (radius < self.correct_radius) and (radius > 20):
                 #PID to control the distance between robot and the followed object
                 radius_error = self.correct_radius - radius
                 speed_value = speed_pid.get_value(radius_error)
