@@ -40,7 +40,7 @@ class ColorTracking:
         largest_circle = [(0, 0), 0]
         for (x, y), radius in circles:
             if radius > largest_circle[1]:
-                largest_circle = (int(x), int(y), int(radius))
+                largest_circle = ( (int(x), int(y)), int(radius) )
                 
         return masked_img, largest_circle[0], largest_circle[1]
 
@@ -52,7 +52,7 @@ class ColorTracking:
     def process_frame(self, frame):
         masked_img, coordinates, radius = self.find_object(frame)
         processed_frame = cv2.cvtColor(masked_img, cv2.COLOR_GRAY2BGR)
-        cv2.circle(frame, coordinates, radius, [255, 0, 0])
+        cv2.circle(frame, coordinates, radius, (255, 0, 0), thickness = 2)
         self.make_display(frame, processed_frame)
         return coordinates, radius
 
@@ -70,8 +70,24 @@ class ColorTracking:
             (x, y), radius = self.process_frame(frame)
             self.process_control()
             if self.following and radius > self.correct_radius:
-                pass
+                #PID to control the distance between robot and the followed object
+                radius_error = self.correct_radius - radius
+                speed_value = speed_pid.get_value(radius_error)
+                #PID to control the direction of robot's path to the followed object
+                direction_error = self.center - x
+                direction_value = direction_pid.get_value(direction_error)
 
+                print("Radius, Radius Error, Speed Value, Direction Error, Direction Value")
+                print(f"{radius}, {radius_error}, {speed_value:.2f}, {direction_error}, {direction_value:.2f}")
+
+                self.robot.set_left(speed_value - direction_value)
+                self.robot_set_right(speed_value + direction_value)
+
+            else:
+                self.robot.stop_motors()
+                if not self.following:
+                    speed_pid.reset()
+                    direction_pid.reset()
 
 print("Starting up color tracking...")
 color_tracking = ColorTracking(Robot())
