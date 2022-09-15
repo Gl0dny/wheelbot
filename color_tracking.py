@@ -1,4 +1,4 @@
-#!usr/bin/python3
+#!/usr/bin/python3
 import time
 import cv2
 import numpy as np
@@ -13,17 +13,17 @@ class ColorTracking:
         self.green_color_low_range = (35, 102, 25)  #HSV - Hue Saturation Value
         self.green_color_high_range = (80, 255, 255)
         self.correct_radius = 50   
-        self.center = img_server.camera_stream.resolution // 2 
-        self.motors_on = False
+        self.center = 160       #hardcoded half of horizontal resolution
+        self.following = False
 
     def process_control(self):
         instruction = img_server.core.get_control_instruction()
         if instruction:
             command = instruction["command"]
             if command == "start":
-                self.motors_on = True
+                self.following = True
             elif command == "stop":
-                self.motors_on == False
+                self.following == False
             elif command == "exit":
                 print("Closing...")
                 exit()
@@ -55,3 +55,28 @@ class ColorTracking:
         cv2.circle(frame, coordinates, radius, [255, 0, 0])
         self.make_display(frame, processed_frame)
         return coordinates, radius
+
+    def run(self):
+        self.robot.set_pan(0)
+        self.robot.set_tilt(0)
+        camera = img_server.camera_stream.setup_camera()
+        speed_pid = PIController(proportional_constant=0.8, integral_constant=0.1, windup_limit=100)
+        direction_pid = PIController(proportional_constant=0.25,integral_constant=0.05, windup_limit=400)
+        time.sleep(0.1)
+        self.robot.servos.stop_all()
+        print("Configuration finished")
+        
+        for frame in img_server.camera_stream.start_stream(camera):
+            (x, y), radius = self.process_frame(frame)
+            self.process_control()
+            if self.following and radius > self.correct_radius:
+                pass
+
+
+print("Starting up color tracking...")
+color_tracking = ColorTracking(Robot())
+process = img_server.core.start_server_process("color_tracking.html")
+try:
+    color_tracking.run()
+finally:
+    process.terminate()

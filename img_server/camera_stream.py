@@ -3,12 +3,11 @@ from picamera import PiCamera
 import numpy as np
 import cv2
 
+resolution = (320, 240)
 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
 
 def setup_camera():
     camera = PiCamera()
-    global resolution 
-    resolution = (320, 240)
     camera.resolution = resolution
     camera.framerate = 30
     camera.rotation = 0
