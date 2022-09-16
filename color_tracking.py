@@ -92,7 +92,7 @@ class ColorTracking:
 
 print("Starting up color tracking...")
 color_tracking = ColorTracking(Robot())
-process = img_server.core.start_server_process("color_tracking.html")
+process = img_server.core.start_server_process("vision_tracking.html")
 try:
     color_tracking.run()
 finally:
