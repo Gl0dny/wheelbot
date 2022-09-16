@@ -13,7 +13,7 @@ class FaceTracking:
         self.robot = robot
         #haar cascades
         cascade_path = "/home/pi/.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml"
-        assert os.path.exists(cascade_path), f"File {cascade_path} doesn't exist in the give cascade path"
+        assert os.path.exists(cascade_path), f"File {cascade_path} doesn't exist in the given cascade path"
         self.cascade = cv2.CascadeClassifier(cascade_path)
         #parameters
         self.center_x = 160 #hardcoded half of horizontal resolution
