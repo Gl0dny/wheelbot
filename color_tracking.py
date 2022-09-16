@@ -15,6 +15,9 @@ class ColorTracking:
         self.correct_radius = 50 
         self.center = 160       #hardcoded half of horizontal resolution
         self.following = False
+        #PIDs
+        self.speed_pid = PIController(proportional_constant=0.8, integral_constant=0.1, windup_limit=100)
+        self.direction_pid = PIController(proportional_constant=0.25,integral_constant=0.05, windup_limit=400)
 
     def process_control(self):
         instruction = img_server.core.get_control_instruction()
@@ -62,8 +65,6 @@ class ColorTracking:
         self.robot.set_pan(0)
         self.robot.set_tilt(0)
         camera = img_server.camera_stream.setup_camera()
-        speed_pid = PIController(proportional_constant=0.8, integral_constant=0.1, windup_limit=100)
-        direction_pid = PIController(proportional_constant=0.25,integral_constant=0.05, windup_limit=400)
         time.sleep(0.1)
         self.robot.servos.stop_all()
         print("Configuration finished")
@@ -71,24 +72,25 @@ class ColorTracking:
         for frame in img_server.camera_stream.start_stream(camera):
             (x, y), radius = self.process_frame(frame)
             self.process_control()
+
             if self.following and (radius > 5):
                 #PID to control the distance between robot and the followed object
                 radius_error = self.correct_radius - radius
-                speed_value = speed_pid.get_value(radius_error)
+                speed_value = self.speed_pid.get_value(radius_error)
                 #PID to control the direction of robot's path to the followed object
                 direction_error = self.center - x
-                direction_value = direction_pid.get_value(direction_error)
-
-                print("Radius, Radius Error, Speed Value, Direction Error, Direction Value")
-                print(f"{radius}, {radius_error}, {speed_value:.2f}, {direction_error}, {direction_value:.2f}")
+                direction_value = self.direction_pid.get_value(direction_error)
 
                 self.robot.set_left(speed_value - direction_value)
                 self.robot.set_right(speed_value + direction_value)
+
+                print(f"Radius: {radius}, Radius error: {radius_error}, Speed value: {speed_value:.2f}, Direction error: {direction_error}, Direction value: {direction_value:.2f}")
+
             else:
                 self.robot.stop_motors()
                 if not self.following:
-                    speed_pid.reset()
-                    direction_pid.reset()
+                    self.speed_pid.reset()
+                    self.direction_pid.reset()
 
 print("Starting up color tracking...")
 color_tracking = ColorTracking(Robot())

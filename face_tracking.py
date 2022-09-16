@@ -63,7 +63,27 @@ class FaceTracking:
         return x, y, w, h
 
     def run(self):
-        pass
+        self.robot.set_pan(0)
+        self.robot.set_tilt(0)
+        camera = img_server.camera_stream.setup_camera()
+        time.sleep(0.1)
+        self.robot.servos.stop_all()
+        print("Configuration finished")
+
+        for frame in img_server.camera_stream.start_stream(camera):
+            (x, y, w ,h) = self.process_frame(frame)
+            self.process_control()
+
+            if self.following and h > self.min_size:
+                pan_error = self.center_x - (x + (w/2))
+                pan_value = self.pan_pid.get_value(pan_error)
+                tilt_error = self.center_y - (y + (h/2))
+                tilt_value = self.tilt_pid.get_value(tilt_error)
+
+                self.robot.set_pan(int(pan_value))
+                self.robot.set_tilt(int(tilt_value))
+
+                print(f"X: {x}, Y: {y}, Width: {w}, Height: {h}, Pan error: {pan_error}, Pan value: {pan_value:.2f}, Tilt error:{tilt_error}, Tilt value: {tilt_value:.2f}")
 
 print("Loading...")
 face_tracking = FaceTracking(Robot())
