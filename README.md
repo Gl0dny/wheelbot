@@ -13,3 +13,4 @@ ledshim
 
 
 dodac kilka kolorów do wykrywania(?)
+Vision system do poprawy
