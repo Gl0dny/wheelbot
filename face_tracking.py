@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+from curses.textpad import rectangle
+from operator import itemgetter
 import time
 import cv2
 import os
@@ -12,7 +14,7 @@ class FaceTracking:
         #haar cascades
         cascade_path = "/home/pi/.local/lib/python3.7/site-packages/cv2/data/haarcascade_frontalface_default.xml"
         assert os.path.exists(cascade_path), f"File {cascade_path} doesn't exist in the give cascade path"
-        self.scascade = cv2.CascadeClassifier(cascade_path)
+        self.cascade = cv2.CascadeClassifier(cascade_path)
         #parameters
         self.center_x = 160 #hardcoded half of horizontal resolution
         self.center_y = 120 #hardcoded half of vertical resolution
@@ -38,6 +40,17 @@ class FaceTracking:
             if command == "exit":
                 print("Color tracking stopped.")
                 exit()      
+    
+    def find_object(self, original_frame):
+        gray_img = cv2.cvtColor(original_frame, cv2.COLOR_BGR2GRAY)
+        rectangles = self.cascade.detectMultiScale(gray_img)
+
+        largest_rectangle = [0, (0, 0, 0, 0)]
+        for (x, y, w, h) in rectangles:
+            item_area = w * h
+            if item_area > largest_rectangle[0]:
+                largest_rectangle = ( int(item_area), (int(x), int(y), int(w), int(h)) )
+        return largest_rectangle[1]
 
     def run(self):
         pass
