@@ -52,6 +52,16 @@ class FaceTracking:
                 largest_rectangle = ( int(item_area), (int(x), int(y), int(w), int(h)) )
         return largest_rectangle[1]
 
+    def make_display(self, display_frame):
+        encoded_bytes = img_server.camera_stream.get_encoded_bytes_for_frame(display_frame)
+        img_server.core.put_output_image(encoded_bytes)
+
+    def process_frame(self, frame):
+        (x, y, w, h) = self.find_object(frame)
+        cv2.rectangle(frame, (x, y), (x + w, y + w), (255, 0, 0), thickness = 2)
+        self.make_display(frame)
+        return x, y, w, h
+
     def run(self):
         pass
 
