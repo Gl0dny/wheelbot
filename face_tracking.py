@@ -21,7 +21,23 @@ class FaceTracking:
         #PIDs
         self.pan_pid = PIController(proportional_constant = 0.1, integral_constant = 0.03)
         self.tilt_pid = PIController(proportional_constant= -0.1, integral_constant = -0.03)
-        
+
+    def process_control(self):
+        instruction = img_server.core.get_control_instruction()
+        if instruction:
+            command = instruction["command"]
+            if command == "start":
+                self.following = True
+                print("Following...")
+            elif command == "stop":
+                self.following = False
+                self.pan_pid.reset()
+                self.tilt_pid.reset()
+                self.robot.servos.stop_all()
+                print("Following stopped.")
+            if command == "exit":
+                print("Color tracking stopped.")
+                exit()      
 
     def run(self):
         pass
