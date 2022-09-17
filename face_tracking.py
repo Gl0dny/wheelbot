@@ -66,7 +66,7 @@ class FaceTracking:
         camera = img_server.camera_stream.setup_camera()
         time.sleep(0.1)
         self.robot.servos.stop_all()
-        print("Configuration finished")
+        print("Configuration finished.")
 
         for frame in img_server.camera_stream.start_stream(camera):
             (x, y, w ,h) = self.process_frame(frame)
