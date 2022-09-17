@@ -83,7 +83,7 @@ class FaceTracking:
 
                 print(f"X: {x}, Y: {y}, Width: {w}, Height: {h}, Pan error: {pan_error}, Pan value: {pan_value:.2f}, Tilt error:{tilt_error}, Tilt value: {tilt_value:.2f}")
 
-print("Loading...")
+print("Starting up face tracking..")
 face_tracking = FaceTracking(Robot())
 process = img_server.core.start_server_process("vision_tracking.html")
 try:

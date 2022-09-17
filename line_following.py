@@ -15,4 +15,21 @@ class LineFollwing:
         self.center = 160
         self.following = False
         self.speed = 50
-        
+        #colors
+        self.crosshair_color = (0, 255, 0)
+        self.line_middle_color = (128, 128, 255)
+        self.graph_color = (255, 128, 128)
+
+def process_control(self):
+        instruction = img_server.core.get_control_instruction()
+        if instruction:
+            command = instruction["command"]
+            if command == "start":
+                self.following = True
+                print("Following...")
+            elif command == "stop":
+                self.following = False
+                print("Following stopped.")
+            if command == "exit":
+                print("Line following stopped.")
+                exit()
