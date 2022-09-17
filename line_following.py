@@ -41,6 +41,23 @@ def find_line(self, frame):
     pass
 
 def process_frame(self, frame):
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    # blur = cv2.blue(gray, (5, 5))
+    row = gray[self.check_row].astype(np.int32)
+    diff = np.diff(row)
+    max_diff = np.amax(diff, 0)
+    min_diff = np.amin(diff, 0)
+
+    if max_diff < 0 or min_diff > 0:
+        return 0, 0
+
+    min_diff_index = np.where(diff == min_diff)[0][0]
+    max_diff_index = np.where(diff == max_diff)[0][0]
+    middle = (min_diff_index + max_diff_index) // 2
+    peak_diff = max_diff - min_diff
+
+def make_display(self, frame, middle, min_diff, max_diff, diff_list)
+    return middle, peak_diff
     pass
 
 def run(self):
@@ -54,10 +71,10 @@ def run(self):
     last_time = time.time()
 
     for frame in img_server.camera_stream.start_stream(camera):
-        x, magnitude = self.process_frame(frame)
+        x, peak_diff = self.process_frame(frame)
         self.process_control()
 
-        if self.following and magnitude > self.diff_threshold:
+        if self.following and peak_diff > self.diff_threshold:
             direction_error = self.center - x
             new_time = time.time()
             dt = new_time - last_time
