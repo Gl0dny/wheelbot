@@ -12,13 +12,13 @@ class LineFollowing:
         self.robot = robot
         #line following parameteres
         self.check_row = 180
-        self.diff_threshold = 10
+        self.diff_threshold = 100
         self.center = 160
         self.following = False
         self.speed = 50
         #colors
         self.crosshair_color = (0, 255, 0)
-        self.middle_line_color = (128, 128, 255)
+        self.middle_line_color = (0, 0, 255)
         self.graph_color = (255, 128, 128)
         #PIDs
         self.direction_pid = PIController(proportional_constant=0.4,integral_constant=0.01, windup_limit=400)
@@ -37,22 +37,26 @@ class LineFollowing:
                     print("Line following stopped.")
                     exit()
 
-    def make_display(self, frame, middle, min_diff, max_diff, diff_list):
-        cv2.line(frame, (self.center - 4, self.check_row), (self.center + 4, self.check_row), self.crosshair_color)
-        cv2.line(frame, (self.center, self.check_row - 4), (self.center, self.check_row + 4), self.crosshair_color)
-        cv2.line(frame, (middle, self.check_row - 8), (middle, self.check_row + 8), self.middle_line_color)
-        cv2.line(frame, (min_diff, self.check_row - 4), (min_diff, self.check_row + 4), self.middle_line_color)
-        cv2.line(frame, (max_diff, self.check_row - 4), (max_diff, self.check_row + 4), self.middle_line_color)
+    def make_display(self, frame, middle, min_diff_index, max_diff_index, diff):
+        cv2.line(frame, (self.center - 4, self.check_row), (self.center + 4, self.check_row), self.crosshair_color, thickness = 1)
+        cv2.line(frame, (self.center, self.check_row - 4), (self.center, self.check_row + 4), self.crosshair_color, thickness = 1)
+        cv2.line(frame, (middle, self.check_row - 8), (middle, self.check_row + 8), self.middle_line_color, thickness = 2)
+        cv2.line(frame, (min_diff_index, self.check_row - 4), (min_diff_index, self.check_row + 4), self.middle_line_color, thickness = 2)
+        cv2.line(frame, (max_diff_index, self.check_row - 4), (max_diff_index, self.check_row + 4), self.middle_line_color, thickness = 2)
 
-        graph_frame = np.zeros((img_server.camera_stream.size[1], img_server.camera_stream.size[0], 3), np.uint8)
+        graph_frame = np.zeros((img_server.camera_stream.resolution[1], img_server.camera_stream.resolution[0], 3), np.uint8)
         self.make_cv2_simple_graph(graph_frame, diff)
 
         display_frame = np.concatenate((frame, graph_frame), axis = 1)
         encoded_bytes = img_server.camera_stream.get_encoded_bytes_for_frame(display_frame)
         img_server.core.put_output_image(encoded_bytes)
 
-    def make_cv2_simple_graph(self, frame, data):
-        pass
+    def make_cv2_simple_graph(self, frame, data):   
+        last = data[0]
+        graph_middle = 100
+        for x, item in enumerate(data):
+            cv2.line(frame, (x, last + graph_middle), (x+1, item + graph_middle), self.graph_color)
+        last = item
 
     def process_frame(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -70,7 +74,7 @@ class LineFollowing:
         middle = (min_diff_index + max_diff_index) // 2
         peak_diff = max_diff - min_diff
 
-        self.make_display(frame, middle, min_diff, max_diff, diff)
+        self.make_display(frame, middle, min_diff_index, max_diff_index, diff)
         
         return middle, peak_diff
 
