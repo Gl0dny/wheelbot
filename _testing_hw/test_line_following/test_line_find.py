@@ -21,3 +21,15 @@ diff = np.diff(row)
 x = np.arange(len(diff))
 plt.plot(x, diff)
 plt.savefig("blurred.png")
+
+max_diff = np.amax(diff, 0)
+min_diff = np.amin(diff, 0)
+max_diff_index = np.where(diff == max_diff)[0][0]
+min_diff_index = np.where(diff == min_diff)[0][0]
+print(max_diff, max_diff_index, min_diff, min_diff_index)
+middle = (min_diff_index + max_diff_index) // 2
+print(middle)
+plt.plot([middle, middle], [min_diff, max_diff], 'r-')
+plt.plot([min_diff_index, min_diff_index], [min_diff, max_diff], 'g--')
+plt.plot([max_diff_index, max_diff_index], [min_diff, max_diff], 'g--')
+plt.savefig("located_lines.png")
