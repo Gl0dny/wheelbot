@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-from curses.textpad import rectangle
-from operator import itemgetter
 import time
 import cv2
 import os
