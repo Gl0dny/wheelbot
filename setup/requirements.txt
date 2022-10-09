@@ -5,3 +5,4 @@ gpiozero
 flask
 git+https://github.com/orionrobots/Raspi_MotorHAT
 "picamera[array]"
+ledshim

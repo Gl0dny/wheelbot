@@ -23,3 +23,6 @@
     else:
     return n + 42
 
+dodac kilka kolorów do wykrywania(?)
+Vision system do poprawy
+PIDs to calibrate

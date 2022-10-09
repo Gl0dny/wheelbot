@@ -2,8 +2,6 @@ import subprocess
 
 class RobotModes():
     mode_config = {
-        "avoid_behavior": "avoid_behavior.py",
-        "circle_head": "test_circle_pan_tilt_behavior.py",
         "test_rainbow": "test_rainbow.py"
     }
 
